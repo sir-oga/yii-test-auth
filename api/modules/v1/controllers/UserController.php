@@ -138,28 +138,27 @@ class UserController extends ActiveController
     {
         /** @var User $model */
         $model = new $this->modelClass;
-//        $userNamesRaw = Yii::$app->request->post('user_names');
-//        $text = Yii::$app->request->post('text');
-//        if (!$userNamesRaw) $model->addErrors(['user_names' => 'user_names can not be empty!']);
-//        if (!$text) $model->addErrors(['text' => 'text can not be empty!']);
-//        if ($model->hasErrors()) return $model;
-//        $userNames = json_decode($userNamesRaw, true);
-//        if (!$userNames) $userNames = explode(',' , $userNamesRaw);
-//        $userData = [];
-//        foreach ($userNames as $username){
-//            $user = Git::getUser($username);
-//            if (!$user) continue;
-//            $userData[] = $user;
-//        }
-//        $mailingResult = Mailing::sendEmail($userData, $text);
-        $mailingResult = Mailing::sendEmail([], 'asdfasdf');
+        $userNamesRaw = Yii::$app->request->post('user_names');
+        $text = Yii::$app->request->post('text');
+        if (!$userNamesRaw) $model->addErrors(['user_names' => 'user_names can not be empty!']);
+        if (!$text) $model->addErrors(['text' => 'text can not be empty!']);
+        if ($model->hasErrors()) return $model;
+        $userNames = json_decode($userNamesRaw, true);
+        if (!$userNames) $userNames = explode(',' , $userNamesRaw);
+        $userData = [];
+        foreach ($userNames as $username){
+            $user = Git::getUser($username);
+            if (!$user) continue;
+            $userData[] = $user;
+        }
+        $mailingResult = Mailing::sendEmail($userData, $text);
         $result = [
-//            'total_accounts' => count($userNames),
-//            'accounts_with_email' => count($userData),
+            'total_accounts' => count($userNames),
+            'accounts_with_email' => count($userData),
             'send_success' => $mailingResult,
-//            'send_error' => count($userData) - $mailingResult,
+            'send_error' => count($userData) - $mailingResult,
+            'mailing_data' => $userData,
         ];
-        $result = array_merge($result, $mailingResult);
 
         return $result;
     }
